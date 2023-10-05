@@ -19,16 +19,22 @@ export default function ImageToWord({ dbArray, img }) {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      const imageRun = new ImageRun({
-        data: imageBytes,
-        transformation: {
-          width: 200,
-          height: 200,
-        },
+      const imageRun = new Paragraph({
+        children: [
+          new ImageRun({
+            data: imageBytes,
+            transformation: {
+              width: 200,
+              height: 200,
+            },
+          }),
+        ],
       });
 
       children.push(imageRun);
-      const name = new TextRun("row.name");
+      const name = new Paragraph({
+        children: [new TextRun(row.name)],
+      });
       children.push(name);
     }
 
@@ -36,11 +42,7 @@ export default function ImageToWord({ dbArray, img }) {
       sections: [
         {
           properties: {},
-          children: [
-            new Paragraph({
-              children: children,
-            }),
-          ],
+          children: children,
         },
       ],
     });
