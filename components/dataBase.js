@@ -18,10 +18,8 @@ export function DataBase(props) {
   const [currentName, setCurrentName] = useState(undefined);
   const [imagePath, setImagePath] = useState();
 
-  console.log("props.img@dataBase", props.img);
-
   useEffect(() => {
-    //Delete Tabe only in Dev Phase
+    // // Delete Tabe only in Dev Phase
     // db.transaction((tx) => {
     //   tx.executeSql(
     //     "DROP TABLE IF EXISTS names",
@@ -47,18 +45,21 @@ export function DataBase(props) {
       tx.executeSql(
         "SELECT * FROM names",
         null,
-        (txObj, resultSet) => setNames(resultSet.rows._array),
+        (txObj, resultSet) => {
+          setNames(resultSet.rows._array);
+        },
         (txObj, error) => console.log(error)
       );
     });
 
-    console.log("names@database", names);
-    setImagePath(props.img);
-    console.log("imagePath@database", imagePath);
-
     // If database is loading to long
     setIsLoading(false);
   }, [db]);
+
+  useEffect(() => {
+    setImagePath(props.img);
+    console.log("imagePath@db", imagePath);
+  }, [props.img]);
 
   if (isLoading) {
     return (
@@ -68,7 +69,12 @@ export function DataBase(props) {
     );
   }
 
-  // Make database entry
+  // Use callback to send image filepath up to parent (root)
+  // const resetPreviewInCamera = () => {
+  //   props.setPicFromCam(null);
+  // };
+
+  // Make database entry and update the array
   const submitInputformAndPic = () => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -77,13 +83,14 @@ export function DataBase(props) {
         (txObj, resultSet) => {
           const existingNames = [
             ...names,
-            { id: resultSet.insertId, name: currentName },
+            { id: resultSet.insertId, name: currentName, imagePath: imagePath },
           ];
           setNames(existingNames);
           setCurrentName(undefined);
         },
         (txObj, error) => console.log(error)
       );
+      // resetPreviewInCamera();
     });
   };
 
@@ -104,11 +111,14 @@ export function DataBase(props) {
   };
 
   const showNames = () => {
+    // console.log("names@db", names);
     return names.map((name, index) => {
+      const pic = name.imagePath ? name.imagePath.slice(-20) : name.imagePath;
+
       return (
         <View key={index} style={styles.row}>
           <Text>{name.name}</Text>
-          <Text>{name.imagePath}</Text>
+          <Text>{pic}</Text>
           <Button title="Delete" onPress={() => deleteName(name.id)} />
           <Button title="Update" onPress={() => updateName(name.id)} />
         </View>
@@ -116,6 +126,7 @@ export function DataBase(props) {
     });
   };
 
+  console.info({ names });
   return (
     <View style={styles.container}>
       <TextInput
@@ -125,7 +136,7 @@ export function DataBase(props) {
       />
       <Button title="Add Name" onPress={submitInputformAndPic} />
       {showNames()}
-      <ImageToWord img={imagePath} />
+      <ImageToWord dbArray={names} img={imagePath} />
     </View>
   );
 }

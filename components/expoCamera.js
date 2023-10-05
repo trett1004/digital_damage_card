@@ -21,8 +21,6 @@ export function ExpoCamera(props) {
         base64: true,
       });
 
-      console.log("result", result);
-
       // If image is saved ...
       if (!result.cancelled) {
         // The image was taken, and `result.assets[0]["uri"]` contains the URI of the captured image.
@@ -54,7 +52,6 @@ export function ExpoCamera(props) {
           props.setPicFromCam(imagePath);
         };
         sendImgUp(destinationUri);
-        console.log("Image saved to documents directory:");
       }
     } catch (error) {
       console.error("Error taking picture and saving:", error);
@@ -71,8 +68,6 @@ export function ExpoCamera(props) {
       )}
 
       <Button title="Take Picture and Save" onPress={takePictureAndSave} />
-
-      {imageUri && <Text>Image Below</Text>}
     </View>
   );
 }

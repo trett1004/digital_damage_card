@@ -17,9 +17,17 @@ import { ChildComponent } from "./components/child";
 import WordDocumentGenerator from "./components/dbToWord";
 import ImageToWord from "./components/imageToWord";
 import { ExpoCamera } from "./components/expoCamera";
+import { Delete } from "./components/deleteDocuments";
 
 export default function App() {
   const [openCam, setOpenCam] = useState(false);
+  const [displayPreview, setDisplayPreview] = useState(false);
+  const [picFromCam, setPicFromCam] = useState("");
+
+  // if (displayPreview) {
+  //   setPicFromCam(null);
+  //   setDisplayPreview(false);
+  // }
 
   const openCamera = () => {
     setOpenCam(true);
@@ -28,7 +36,6 @@ export default function App() {
     setOpenCam(false);
   };
 
-  const [picFromCam, setPicFromCam] = useState(null);
   console.log("picFromCam@root", picFromCam);
 
   return (
@@ -36,18 +43,11 @@ export default function App() {
       <ScrollView style={styles.scrollView}>
         <StatusBar style="auto" />
 
-        {picFromCam && <DataBase img={picFromCam} />}
+        <DataBase img={picFromCam} />
         <Text>Bild: {picFromCam}</Text>
-
-        <Text style={{ fontSize: 42 }}>PlaceHolder</Text>
-        <Text style={{ fontSize: 42 }}>PlaceHolder</Text>
-
-        {/* <DataBase styles={styles} /> */}
-        {/* <ImageToWord imageId={imageId} /> */}
+        <Text style={{ fontSize: 42 }}>PI</Text>
         <ExpoCamera setPicFromCam={setPicFromCam} />
-        {/* <ChildComponent img={picFromCam} /> */}
-
-        {/* <CreateDocx styles={styles.container} /> */}
+        {/* <Delete /> */}
       </ScrollView>
     </SafeAreaView>
   );
