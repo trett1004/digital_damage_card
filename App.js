@@ -17,6 +17,7 @@ import { ChildComponent } from "./components/child";
 import WordDocumentGenerator from "./components/dbToWord";
 import ImageToWord from "./components/imageToWord";
 import { ExpoCamera } from "./components/expoCamera";
+import { InputForm } from "./components/inputForm";
 import { Delete } from "./components/deleteDocuments";
 
 export default function App() {
@@ -42,7 +43,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <StatusBar style="auto" />
-
+        <InputForm />
         <DataBase img={picFromCam} />
         <Text>Bild: {picFromCam}</Text>
         <Text style={{ fontSize: 42 }}>PI</Text>
