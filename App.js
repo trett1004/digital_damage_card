@@ -40,17 +40,13 @@ export default function App() {
     setOpenCam(false);
   };
 
-  console.log("picFromCam@root", picFromCam);
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <StatusBar style="auto" />
         <InputForm setFormData={setFormData} />
         <DataBase formData={formData} />
-        <Text>Bild: {picFromCam}</Text>
         <Text style={{ fontSize: 42 }}>PI</Text>
-        <ExpoCamera setPicFromCam={setPicFromCam} />
         {/* <Delete /> */}
       </ScrollView>
     </SafeAreaView>
@@ -69,7 +65,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    backgroundColor: "pink",
+    backgroundColor: "cornsilk",
     flexDirection: "column",
   },
 });

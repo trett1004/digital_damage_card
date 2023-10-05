@@ -18,69 +18,10 @@ export function DataBase({ formData }) {
   const [currentName, setCurrentName] = useState(undefined);
   const [imagePath, setImagePath] = useState();
 
-  console.info("formData@db", formData);
-
-  useEffect(() => {
-    // // Delete Tabe only in Dev Phase
-    // db.transaction((tx) => {
-    //   tx.executeSql(
-    //     "DROP TABLE IF EXISTS names",
-    //     [],
-    //     (txObj, resultSet) => {
-    //       // Table has been successfully dropped.
-    //       console.log("Table dropped.");
-    //     },
-    //     (txObj, error) => {
-    //       // Handle any errors that occur during the drop operation.
-    //       console.log("Error dropping table: ", error);
-    //     }
-    //   );
-    // });
-
-    //////////////////////////// CREATE TABLE ////////////////////////////
-    db.transaction((tx) => {
-      tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, imagePath TEXT)"
-      );
-    });
-    //////////////////////////// READ TABLE ////////////////////////////
-    db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT * FROM names",
-        null,
-        (txObj, resultSet) => {
-          setNames(resultSet.rows._array);
-        },
-        (txObj, error) => console.log(error)
-      );
-    });
-
-    // If database is loading to long
-    setIsLoading(false);
-  }, [db]);
-
-  //////////////////////////// Get Picture from Parent ////////////////////////////
-  // useEffect(() => {
-  //   setImagePath(props.img);
-  //   console.log("imagePath@db", imagePath);
-  // }, [props.img]);
-
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading data...</Text>
-      </View>
-    );
-  }
-
-  // Use callback to send image filepath up to parent (root)
-  // const resetPreviewInCamera = () => {
-  //   props.setPicFromCam(null);
-  // };
-
-  //////////////////////////// WRITE TO TABLE ////////////////////////////
-  // Make database entry and update the array
   const submitInputformAndPic = () => {
+    if (!formData || !formData.name) {
+      return;
+    }
     db.transaction((tx) => {
       tx.executeSql(
         "INSERT INTO names (name, imagePath) values (?, ?)",
@@ -101,6 +42,44 @@ export function DataBase({ formData }) {
       );
     });
   };
+
+  useEffect(() => {
+    //////////////////////////// CREATE TABLE ////////////////////////////
+    db.transaction((tx) => {
+      tx.executeSql(
+        "CREATE TABLE IF NOT EXISTS names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, imagePath TEXT)"
+      );
+    });
+    //////////////////////////// READ TABLE ////////////////////////////
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM names",
+        null,
+        (txObj, resultSet) => {
+          setNames(resultSet.rows._array);
+        },
+        (txObj, error) => console.log(error)
+      );
+    });
+
+    //////////////////////////// WRITE TO TABLE ////////////////////////////
+    // Make database entry and update the array
+    if (formData) {
+      submitInputformAndPic();
+    }
+
+    // If database is loading to long
+    setIsLoading(false);
+  }, [formData]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading data...</Text>
+      </View>
+    );
+  }
+
   //////////////////////////// DELETE ROWS IN TABLE ////////////////////////////
   const deleteName = (id) => {
     db.transaction((tx) => {
@@ -111,7 +90,6 @@ export function DataBase({ formData }) {
           if (resultSet.rowsAffected > 0) {
             let existingNames = [...names].filter((name) => name.id !== id);
             setNames(existingNames);
-            console.info("names@db", names);
           }
         },
         (txObj, error) => console.log(error)
@@ -120,7 +98,6 @@ export function DataBase({ formData }) {
   };
   //////////////////////////// RENDER TABLE TO UI ////////////////////////////
   const showNames = () => {
-    // console.log("names@db", names);
     return names.map((name, index) => {
       const pic = name.imagePath ? name.imagePath.slice(-20) : name.imagePath;
 
@@ -142,9 +119,9 @@ export function DataBase({ formData }) {
         placeholder="name"
         onChangeText={setCurrentName}
       />
-      <Button title="Add Name" onPress={submitInputformAndPic} />
+      {/* <Button title="Add Name" onPress={submitInputformAndPic} /> */}
       {showNames()}
-      <ImageToWord dbArray={names} img={imagePath} />
+      <ImageToWord dbArray={names} />
     </View>
   );
 }
@@ -212,3 +189,19 @@ const styles = StyleSheet.create({
 //     );
 //   });
 // };
+
+// // Delete Tabe only in Dev Phase
+// db.transaction((tx) => {
+//   tx.executeSql(
+//     "DROP TABLE IF EXISTS names",
+//     [],
+//     (txObj, resultSet) => {
+//       // Table has been successfully dropped.
+//       console.log("Table dropped.");
+//     },
+//     (txObj, error) => {
+//       // Handle any errors that occur during the drop operation.
+//       console.log("Error dropping table: ", error);
+//     }
+//   );
+// });

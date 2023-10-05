@@ -11,7 +11,8 @@ import {
 import { Button } from "react-native";
 import * as Sharing from "expo-sharing";
 
-export default function ImageToWord({ dbArray, img }) {
+export default function ImageToWord({ dbArray }) {
+  console.info("dbArray", dbArray);
   const generateWordDocument = async () => {
     const children = [];
     for (const row of dbArray) {

@@ -34,7 +34,7 @@ export function ExpoCamera(props) {
         const minutes = String(currentDate.getMinutes()).padStart(2, "0");
         const seconds = String(currentDate.getSeconds()).padStart(2, "0");
         // Create the formatted date and time string
-        const formattedDateTime = `$${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+        const formattedDateTime = `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
 
         // Save the image to the documents directory
         const fileName = `${formattedDateTime}.jpg`;
