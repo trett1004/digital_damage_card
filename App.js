@@ -24,6 +24,9 @@ export default function App() {
   const [openCam, setOpenCam] = useState(false);
   const [displayPreview, setDisplayPreview] = useState(false);
   const [picFromCam, setPicFromCam] = useState("");
+  const [formData, setFormData] = useState([]);
+
+  console.info("formdata@root", formData);
 
   // if (displayPreview) {
   //   setPicFromCam(null);
@@ -43,8 +46,8 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <StatusBar style="auto" />
-        <InputForm />
-        <DataBase img={picFromCam} />
+        <InputForm setFormData={setFormData} />
+        <DataBase formData={formData} />
         <Text>Bild: {picFromCam}</Text>
         <Text style={{ fontSize: 42 }}>PI</Text>
         <ExpoCamera setPicFromCam={setPicFromCam} />

@@ -11,12 +11,14 @@ import * as SQLite from "expo-sqlite";
 import { useState, useEffect } from "react";
 import ImageToWord from "./imageToWord";
 
-export function DataBase(props) {
+export function DataBase({ formData }) {
   const [db, setDb] = useState(SQLite.openDatabase("example.db"));
   const [isLoading, setIsLoading] = useState(true);
   const [names, setNames] = useState([]);
   const [currentName, setCurrentName] = useState(undefined);
   const [imagePath, setImagePath] = useState();
+
+  console.info("formData@db", formData);
 
   useEffect(() => {
     // // Delete Tabe only in Dev Phase
@@ -35,12 +37,13 @@ export function DataBase(props) {
     //   );
     // });
 
+    //////////////////////////// CREATE TABLE ////////////////////////////
     db.transaction((tx) => {
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, imagePath TEXT)"
       );
     });
-
+    //////////////////////////// READ TABLE ////////////////////////////
     db.transaction((tx) => {
       tx.executeSql(
         "SELECT * FROM names",
@@ -56,10 +59,11 @@ export function DataBase(props) {
     setIsLoading(false);
   }, [db]);
 
-  useEffect(() => {
-    setImagePath(props.img);
-    console.log("imagePath@db", imagePath);
-  }, [props.img]);
+  //////////////////////////// Get Picture from Parent ////////////////////////////
+  // useEffect(() => {
+  //   setImagePath(props.img);
+  //   console.log("imagePath@db", imagePath);
+  // }, [props.img]);
 
   if (isLoading) {
     return (
@@ -74,26 +78,30 @@ export function DataBase(props) {
   //   props.setPicFromCam(null);
   // };
 
+  //////////////////////////// WRITE TO TABLE ////////////////////////////
   // Make database entry and update the array
   const submitInputformAndPic = () => {
     db.transaction((tx) => {
       tx.executeSql(
         "INSERT INTO names (name, imagePath) values (?, ?)",
-        [currentName, imagePath],
+        [formData.name, formData.img],
         (txObj, resultSet) => {
           const existingNames = [
             ...names,
-            { id: resultSet.insertId, name: currentName, imagePath: imagePath },
+            {
+              id: resultSet.insertId,
+              name: formData.name,
+              imagePath: formData.img,
+            },
           ];
           setNames(existingNames);
           setCurrentName(undefined);
         },
         (txObj, error) => console.log(error)
       );
-      // resetPreviewInCamera();
     });
   };
-
+  //////////////////////////// DELETE ROWS IN TABLE ////////////////////////////
   const deleteName = (id) => {
     db.transaction((tx) => {
       tx.executeSql(
@@ -103,13 +111,14 @@ export function DataBase(props) {
           if (resultSet.rowsAffected > 0) {
             let existingNames = [...names].filter((name) => name.id !== id);
             setNames(existingNames);
+            console.info("names@db", names);
           }
         },
         (txObj, error) => console.log(error)
       );
     });
   };
-
+  //////////////////////////// RENDER TABLE TO UI ////////////////////////////
   const showNames = () => {
     // console.log("names@db", names);
     return names.map((name, index) => {
@@ -126,7 +135,6 @@ export function DataBase(props) {
     });
   };
 
-  console.info({ names });
   return (
     <View style={styles.container}>
       <TextInput
@@ -156,12 +164,6 @@ const styles = StyleSheet.create({
     margin: 8,
   },
 });
-
-// expo add expo-sqlite
-// expo add expo-file-system
-// expo add expo-document-picker
-// expo add expo-sharing
-// expo add expo-dev-client
 
 /*
   For testing expo-document-picker on iOS we need a standalone app

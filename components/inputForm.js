@@ -5,8 +5,9 @@ import { useState } from "react";
 
 import { ExpoCamera } from "./expoCamera";
 
-export function InputForm() {
-  const [picPlusFormData, setPicPlusFormData] = useState([]);
+export function InputForm({ setFormData }) {
+  const [imgAndFormData, setImgAndFormData] = useState([]);
+  const [picFromCam, setPicFromCam] = useState("");
 
   const {
     control,
@@ -14,11 +15,16 @@ export function InputForm() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      firstName: "Tiki",
-      lastName: "Tok",
+      name: "",
     },
   });
-  const onSubmit = (data) => console.log(data);
+
+  // Send formdata to root
+  const onSubmit = (data) => {
+    data.img = picFromCam;
+    setFormData(data);
+    // console.log("data@Inputform", data);
+  };
 
   return (
     <View style={styles.container}>
@@ -30,33 +36,17 @@ export function InputForm() {
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             style={styles.input}
-            placeholder="First name"
+            placeholder="name"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
           />
         )}
-        name="firstName"
+        name="name"
       />
-      {errors.firstName && <Text>This is required.</Text>}
+      {errors.name && <Text>This is required.</Text>}
 
-      <Controller
-        control={control}
-        rules={{
-          maxLength: 100,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="Last name"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-        name="lastName"
-      />
-
+      <ExpoCamera setPicFromCam={setPicFromCam} />
       <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>
   );
@@ -82,3 +72,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+/*
+<Controller
+control={control}
+rules={{
+  maxLength: 100,
+}}
+render={({ field: { onChange, onBlur, value } }) => (
+  <TextInput
+    style={styles.input}
+    placeholder="Last name"
+    onBlur={onBlur}
+    onChangeText={onChange}
+    value={value}
+  />
+)}
+name="lastName"
+/>
+*/
