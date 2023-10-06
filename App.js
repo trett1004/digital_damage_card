@@ -26,7 +26,7 @@ export default function App() {
   const [picFromCam, setPicFromCam] = useState("");
   const [formData, setFormData] = useState([]);
 
-  console.info("formdata@root", formData);
+  // console.info("formdata@root", formData);
 
   // if (displayPreview) {
   //   setPicFromCam(null);
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    backgroundColor: "cornsilk",
+    backgroundColor: "ghostwhite",
     flexDirection: "column",
   },
 });

@@ -1,12 +1,46 @@
 import { Text, View, TextInput, Button, Alert } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { StyleSheet } from "react-native";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RNPickerSelect from "react-native-picker-select";
 import RadioGroup from "react-native-radio-buttons-group";
 
 import { ExpoCamera } from "./expoCamera";
+
+const radioButtonsDataEdge = [
+  {
+    id: "leadingEdge",
+    label: "Leading Edge",
+    value: "leadingEdge",
+    color: "black",
+    selected: true,
+  },
+  {
+    id: "trailingEdge",
+    label: "Trailing Edge",
+    value: "trailingEdge",
+    color: "black",
+    selected: false,
+  },
+];
+
+const radioButtonsDataSide = [
+  {
+    id: "suctionSide",
+    label: "Suction Side  ",
+    value: "option1",
+    color: "black",
+    selected: true,
+  },
+  {
+    id: "pressureSide",
+    label: "Pressure Side",
+    value: "option2",
+    color: "black",
+    selected: false,
+  },
+];
 
 export function InputForm({ setFormData }) {
   const [imgAndFormData, setImgAndFormData] = useState([]);
@@ -16,9 +50,6 @@ export function InputForm({ setFormData }) {
   const currentDate = new Date();
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  // Radio Buttons
-  const [radioButtons, setRadioButtons] = useState(radioButtonsData);
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(Platform.OS === "ios"); // Hide the date picker on iOS when the user selects a date
@@ -33,13 +64,17 @@ export function InputForm({ setFormData }) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
+      technician: "",
       date: currentDate,
-      windFarm: "",
+      // windFarm: "",
       turbine: "",
       blade: null,
       z: "",
       profileDepth: 0,
+      bladeEdge: "",
+      bladeSide: "",
+      amount: null,
+      dimensions: "",
     },
   });
 
@@ -52,33 +87,17 @@ export function InputForm({ setFormData }) {
 
   return (
     <View style={styles.container}>
-      {/* <View>
-        <Controller
-          name="radioOption"
-          control={control}
-          defaultValue=""
-          render={({ field: { onChange, onBlur, value } }) => (
-            <RadioGroup
-              radioButtons={radioButtons}
-              onPress={onPressRadioButton}
-              layout="row"
-            />
-          )}
-        />
-
-        <Button title="Submit" onPress={handleSubmit(onSubmit)} />
-      </View> */}
-
+      {/*////////////////////// Name //////////////////////*/}
       <Controller
-        name="name"
+        name="technician"
         control={control}
         rules={{
-          required: true,
+          required: false,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             style={styles.input}
-            placeholder="name"
+            placeholder="Technician"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -194,7 +213,7 @@ export function InputForm({ setFormData }) {
           name="profileDepth"
           control={control}
           rules={{
-            required: true,
+            required: false,
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <RNPickerSelect
@@ -219,6 +238,79 @@ export function InputForm({ setFormData }) {
         />
         {errors.profileDepth && <Text>This is required.</Text>}
       </View>
+
+      {/*////////////////////// Leading/Trailing Edge //////////////////////*/}
+      <View>
+        <Controller
+          name="bladeEdge"
+          control={control}
+          rules={{
+            required: false,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <RadioGroup
+              layout="row"
+              radioButtons={radioButtonsDataEdge}
+              onPress={onChange}
+              selectedId={value}
+            />
+          )}
+        />
+      </View>
+
+      {/*////////////////////// Suction/Pressure Side //////////////////////*/}
+      <View>
+        <Controller
+          name="bladeSide"
+          control={control}
+          rules={{
+            required: false,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <RadioGroup
+              layout="row"
+              radioButtons={radioButtonsDataSide}
+              onPress={onChange}
+              selectedId={value}
+            />
+          )}
+        />
+      </View>
+      {/*////////////////////// Amount //////////////////////*/}
+      <Controller
+        name="amount"
+        control={control}
+        rules={{
+          required: false,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={styles.input}
+            placeholder="Amount"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+      {/*////////////////////// Dimenstions LengthxWidth in mm //////////////////////*/}
+      <Controller
+        name="dimensions"
+        control={control}
+        rules={{
+          required: false,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={styles.input}
+            placeholder="Dimensions Length x Width [mm]"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+
       <ExpoCamera setPicFromCam={setPicFromCam} />
       <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>
