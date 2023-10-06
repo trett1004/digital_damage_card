@@ -64,11 +64,12 @@ export function InputForm({ setFormData }) {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      damageNumber: null,
       technician: "",
       date: currentDate,
       // windFarm: "",
       turbine: "",
-      blade: null,
+      Number: "",
       z: "",
       profileDepth: 0,
       bladeEdge: "",
@@ -82,11 +83,29 @@ export function InputForm({ setFormData }) {
   const onSubmit = (data) => {
     data.img = picFromCam;
     setFormData(data);
-    console.log("data@Form", data);
+    // console.log("data@Form", data);
   };
 
   return (
     <View style={styles.container}>
+      {/*////////////////////// Damage Number //////////////////////*/}
+      <Controller
+        name="damageNumber"
+        control={control}
+        rules={{
+          required: false,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={styles.input}
+            placeholder="Damage Number"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+      {errors.name && <Text>This is required.</Text>}
       {/*////////////////////// Name //////////////////////*/}
       <Controller
         name="technician"
@@ -127,7 +146,7 @@ export function InputForm({ setFormData }) {
       </View>
       {/*////////////////////// Windfarm //////////////////////*/}
       <Controller
-        name="windfarm"
+        name="windFarm"
         control={control}
         rules={{
           required: false,
@@ -135,14 +154,14 @@ export function InputForm({ setFormData }) {
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             style={styles.input}
-            placeholder="Windfarm"
+            placeholder="Wind farm"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
           />
         )}
       />
-      {errors.windfarm && <Text>This is required.</Text>}
+      {errors.windFarm && <Text>This is required.</Text>}
 
       {/*////////////////////// Turbine //////////////////////*/}
       <Controller
@@ -167,7 +186,7 @@ export function InputForm({ setFormData }) {
       <View style={styles.input}>
         <Text style={styles.label}>Select Blade Number</Text>
         <Controller
-          name="blade"
+          name="bladeNumber"
           control={control}
           rules={{
             required: false,
@@ -177,14 +196,14 @@ export function InputForm({ setFormData }) {
               style={pickerSelectStyles}
               onValueChange={(value) => onChange(value)}
               items={[
-                { label: "1", value: 1 },
-                { label: "2", value: 2 },
-                { label: "3", value: 3 },
+                { label: "1", value: "1" },
+                { label: "2", value: "2" },
+                { label: "3", value: "3" },
               ]}
             />
           )}
         />
-        {errors.blade && <Text>This is required.</Text>}
+        {errors.bladeNumber && <Text>This is required.</Text>}
       </View>
 
       {/*////////////////////// Z [mm] //////////////////////*/}

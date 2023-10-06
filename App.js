@@ -26,7 +26,7 @@ export default function App() {
   const [picFromCam, setPicFromCam] = useState("");
   const [formData, setFormData] = useState([]);
 
-  // console.info("formdata@root", formData);
+  console.info("formdata@root", formData);
 
   // if (displayPreview) {
   //   setPicFromCam(null);
@@ -47,7 +47,7 @@ export default function App() {
         <InputForm setFormData={setFormData} />
         <DataBase formData={formData} />
         <Text style={{ fontSize: 42 }}>PI</Text>
-        {/* <Delete /> */}
+        <Delete />
       </ScrollView>
     </SafeAreaView>
   );

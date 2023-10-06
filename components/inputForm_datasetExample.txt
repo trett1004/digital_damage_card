@@ -1,0 +1,18 @@
+formData@db {
+    "amount": "2",
+    "blade": 1, 
+    "bladeEdge": "leadingEdge", 
+    "bladeSide": "pressureSide", 
+    "date": 2023-10-06T09:01:01.138Z, 
+    "dimensions": "100x300", 
+    "img": "file:///var/mobile/Containers/Data/Application/9AB1F793-2D2A-44F5-BB67-0E9496948B30/Documents/ExponentExperienceData/%2540anonymous%252FExpoPorject-66c0bf17-2dac-4599-a183-d35656d9f7da/2023-10-06_12-05-24.jpg", 
+    "profileDepth": 20, 
+    "technician": "Tokok", 
+    "turbine": "NH3", 
+    "windfarm": "Nordsee Ost", 
+    "z": "300"}
+
+
+ dbArray= [
+    {"amount": "2", "blade": "1.0", "bladeEdge": "leadingEdge", "bladeSide": "pressureSide", "date": "{
+}", "dimensions": "300x400", "id": 3, "imagePath": "file:///var/mobile/Containers/Data/Application/9AB1F793-2D2A-44F5-BB67-0E9496948B30/Documents/ExponentExperienceData/%2540anonymous%252FExpoPorject-66c0bf17-2dac-4599-a183-d35656d9f7da/2023-10-06_12-23-51.jpg", "profileDepth": "10.0", "technician": "Naknak", "turbine": "nak", "windfarm": "nak", "z": "300"},

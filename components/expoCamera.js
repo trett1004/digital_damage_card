@@ -20,6 +20,7 @@ export function ExpoCamera(props) {
         quality: 0,
         base64: true,
       });
+      console.log("result", result);
 
       // If image is saved ...
       if (!result.cancelled) {
@@ -63,7 +64,7 @@ export function ExpoCamera(props) {
       {imageUri && (
         <Image
           source={{ uri: imageUri }}
-          style={{ width: 400, height: 600, marginVertical: 20 }}
+          style={{ width: 400, height: 533, marginVertical: 20 }}
         />
       )}
 

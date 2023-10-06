@@ -15,28 +15,51 @@ export function DataBase({ formData }) {
   const [db, setDb] = useState(SQLite.openDatabase("example.db"));
   const [isLoading, setIsLoading] = useState(true);
   const [names, setNames] = useState([]);
-  const [currentName, setCurrentName] = useState(undefined);
   const [imagePath, setImagePath] = useState();
-
+  console.log("formData@db", formData);
   const submitInputformAndPic = () => {
-    if (!formData || !formData.name) {
+    if (!formData || !formData.technician) {
       return;
     }
     db.transaction((tx) => {
       tx.executeSql(
-        "INSERT INTO names (name, imagePath) values (?, ?)",
-        [formData.name, formData.img],
+        "INSERT INTO names (amount, bladeNumber, bladeEdge, bladeSide, damageNumber, date, dimensions, imagePath, profileDepth, technician, turbine, windFarm, z) values (?, ?, ?, ?, ? ,?,?,?,?,?,?,?,?)",
+        [
+          formData.amount,
+          formData.bladeNumber,
+          formData.bladeEdge,
+          formData.bladeSide,
+          formData.damageNumber,
+          formData.date,
+          formData.dimensions,
+          formData.img,
+          formData.profileDepth,
+          formData.technician,
+          formData.turbine,
+          formData.windFarm,
+          formData.z,
+        ],
         (txObj, resultSet) => {
           const existingNames = [
             ...names,
             {
               id: resultSet.insertId,
-              name: formData.name,
+              amount: formData.amount,
+              bladeNumber: formData.bladeNumber,
+              bladeEdge: formData.bladeEdge,
+              bladeSide: formData.bladeSide,
+              damageNumber: formData.damageNumber,
+              date: formData.date,
+              dimensions: formData.dimensions,
               imagePath: formData.img,
+              profileDepth: formData.profileDepth,
+              technician: formData.technician,
+              turbine: formData.turbine,
+              windFarm: formData.windFarm,
+              z: formData.z,
             },
           ];
           setNames(existingNames);
-          setCurrentName(undefined);
         },
         (txObj, error) => console.log(error)
       );
@@ -47,7 +70,7 @@ export function DataBase({ formData }) {
     //////////////////////////// CREATE TABLE ////////////////////////////
     db.transaction((tx) => {
       tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, imagePath TEXT)"
+        "CREATE TABLE IF NOT EXISTS names (id INTEGER PRIMARY KEY AUTOINCREMENT, amount TEXT, bladeNumber TEXT, bladeEdge TEXT, bladeSide TEXT, damageNumber Text, date TEXT, dimensions TEXT, imagePath TEXT, profileDepth TEXT, technician TEXT, turbine TEXT, windFarm TEXT, z TEXT)"
       );
     });
     //////////////////////////// READ TABLE ////////////////////////////
@@ -98,8 +121,9 @@ export function DataBase({ formData }) {
   };
   //////////////////////////// RENDER TABLE TO UI ////////////////////////////
   const showNames = () => {
+    console.log("names@db", names);
     return names.map((name, index) => {
-      const pic = name.imagePath ? name.imagePath.slice(-20) : name.imagePath;
+      const pic = name.imagePath ? name.imagePath.slice(-21) : name.imagePath;
 
       return (
         <View key={index} style={styles.row}>
@@ -114,14 +138,8 @@ export function DataBase({ formData }) {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        value={currentName}
-        placeholder="name"
-        onChangeText={setCurrentName}
-      />
-      {/* <Button title="Add Name" onPress={submitInputformAndPic} /> */}
-      {showNames()}
       <ImageToWord dbArray={names} />
+      {showNames()}
     </View>
   );
 }
