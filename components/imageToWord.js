@@ -7,6 +7,10 @@ import {
   HeadingLevel,
   ImageRun,
   TextRun,
+  Table,
+  TableCell,
+  TableRow,
+  WidthType,
 } from "docx";
 import { Button } from "react-native";
 import * as Sharing from "expo-sharing";
@@ -196,10 +200,121 @@ export default function ImageToWord({ dbArray }) {
       );
     }
 
+    const tableRows = [];
+    const tableHeader = new TableRow({
+      children: [
+        new TableCell({
+          width: {
+            size: 300,
+            type: WidthType.PERCENTAGE,
+          },
+
+          children: [new Paragraph("Windfarm")],
+        }),
+        new TableCell({
+          width: {
+            size: 300,
+            type: WidthType.PERCENTAGE,
+          },
+          children: [new Paragraph("Turbine")],
+        }),
+        new TableCell({
+          width: {
+            size: 300,
+            type: WidthType.PERCENTAGE,
+          },
+          children: [new Paragraph("Blade Number")],
+        }),
+        new TableCell({
+          width: {
+            size: 300,
+            type: WidthType.PERCENTAGE,
+          },
+          children: [new Paragraph("Damage Number")],
+        }),
+        new TableCell({
+          width: {
+            size: 300,
+            type: WidthType.PERCENTAGE,
+          },
+          children: [new Paragraph("Date")],
+        }),
+        new TableCell({
+          width: {
+            size: 300,
+            type: WidthType.PERCENTAGE,
+          },
+          children: [new Paragraph("Technician")],
+        }),
+      ],
+    });
+
+    tableRows.push(tableHeader);
+    for (const tableRow of dbArray) {
+      console.log("hello");
+      const line = new TableRow({
+        children: [
+          new TableCell({
+            width: {
+              size: 300,
+              type: WidthType.PERCENTAGE,
+            },
+
+            children: [new Paragraph(tableRow.windFarm)],
+          }),
+          new TableCell({
+            width: {
+              size: 300,
+              type: WidthType.PERCENTAGE,
+            },
+            children: [new Paragraph(tableRow.turbine)],
+          }),
+          new TableCell({
+            width: {
+              size: 300,
+              type: WidthType.PERCENTAGE,
+            },
+            children: [new Paragraph(tableRow.bladeNumber)],
+          }),
+          new TableCell({
+            width: {
+              size: 300,
+              type: WidthType.PERCENTAGE,
+            },
+            children: [new Paragraph(tableRow.damageNumber)],
+          }),
+          new TableCell({
+            width: {
+              size: 300,
+              type: WidthType.PERCENTAGE,
+            },
+            children: [new Paragraph(tableRow.date.toLocaleString("de-DE"))],
+          }),
+          new TableCell({
+            width: {
+              size: 300,
+              type: WidthType.PERCENTAGE,
+            },
+            children: [new Paragraph(tableRow.technician)],
+          }),
+        ],
+      });
+      tableRows.push(line);
+    }
+
     const doc = new Document({
       sections: [
         {
-          properties: {},
+          children: [
+            new Paragraph({ text: "Inhaltsuebersicht" }),
+            new Table({
+              columnWidths: [2000, 2000, 2000, 2000, 2000, 2000],
+              rows: tableRows,
+            }),
+          ],
+        },
+        {
+          properties: {}, // You can specify section properties here if needed
           children: children,
         },
       ],
