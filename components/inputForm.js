@@ -1,7 +1,7 @@
 import { Text, View, TextInput, Button, Alert } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { StyleSheet } from "react-native";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RNPickerSelect from "react-native-picker-select";
 import RadioGroup from "react-native-radio-buttons-group";
@@ -83,7 +83,8 @@ export function InputForm({ setFormData }) {
   const onSubmit = (data) => {
     data.img = picFromCam;
     setFormData(data);
-    // console.log("data@Form", data);
+    setPicFromCam("");
+    console.log("setPicFromCam@setPicFromCam", picFromCam);
   };
 
   return (
@@ -330,7 +331,7 @@ export function InputForm({ setFormData }) {
         )}
       />
 
-      <ExpoCamera setPicFromCam={setPicFromCam} />
+      <ExpoCamera setPicFromCam={setPicFromCam} picFromCam={picFromCam} />
       <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>
   );

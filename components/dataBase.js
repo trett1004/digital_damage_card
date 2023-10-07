@@ -1,29 +1,22 @@
-import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Button,
-  Platform,
-} from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 import * as SQLite from "expo-sqlite";
 import { useState, useEffect } from "react";
-import ImageToWord from "./imageToWord";
+import { ImageToWord } from "./imageToWord";
+import TableSummary from "./tableInUi";
 
 export function DataBase({ formData }) {
   const [db, setDb] = useState(SQLite.openDatabase("example.db"));
   const [isLoading, setIsLoading] = useState(true);
   const [names, setNames] = useState([]);
-  const [imagePath, setImagePath] = useState();
-  console.log("formData@db", formData);
   const submitInputformAndPic = () => {
-    if (!formData || !formData.technician) {
+    if (!formData || !formData.bladeNumber) {
       return;
     }
+
+    //////////////////////////// Write to Table ////////////////////////////
     db.transaction((tx) => {
       tx.executeSql(
-        "INSERT INTO names (amount, bladeNumber, bladeEdge, bladeSide, damageNumber, date, dimensions, imagePath, profileDepth, technician, turbine, windFarm, z) values (?, ?, ?, ?, ? ,?,?,?,?,?,?,?,?)",
+        "INSERT INTO names (amount, bladeNumber, bladeEdge, bladeSide, damageNumber, date, dimensions, imagePath, profileDepth, technician, turbine, windFarm, z) values (?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?, ?)",
         [
           formData.amount,
           formData.bladeNumber,
@@ -121,16 +114,14 @@ export function DataBase({ formData }) {
   };
   //////////////////////////// RENDER TABLE TO UI ////////////////////////////
   const showNames = () => {
-    console.log("names@db", names);
     return names.map((name, index) => {
       const pic = name.imagePath ? name.imagePath.slice(-21) : name.imagePath;
 
       return (
         <View key={index} style={styles.row}>
-          <Text>{name.name}</Text>
+          <Text>{name.technician}</Text>
           <Text>{pic}</Text>
           <Button title="Delete" onPress={() => deleteName(name.id)} />
-          <Button title="Update" onPress={() => updateName(name.id)} />
         </View>
       );
     });
@@ -140,6 +131,7 @@ export function DataBase({ formData }) {
     <View style={styles.container}>
       <ImageToWord dbArray={names} />
       {showNames()}
+      <TableSummary dbArray={names} />
     </View>
   );
 }
@@ -155,71 +147,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "stretch",
-    // justifyContent: "space-between",
     margin: 8,
   },
 });
-
-/*
-  For testing expo-document-picker on iOS we need a standalone app
-  which is why we install expo-dev-client
-
-  If you don't have eas installed then install using the following command:
-  npm install -g eas-cli
-
-  eas login
-  eas build:configure
-
-  Build for local development on iOS or Android:
-  eas build -p ios --profile development --local
-  OR
-  eas build -p android --profile development --local
-
-  May need to install the following to build locally (which allows debugging)
-  npm install -g yarn
-  brew install fastlane
-
-  After building install on your device:
-  For iOS (simulator): https://docs.expo.dev/build-reference/simulators/
-  For Android: https://docs.expo.dev/build-reference/apk/
-
-  Run on installed app:
-  expo start --dev-client
-*/
-
-// //  const updateName = (id) => {
-//   db.transaction((tx) => {
-//     tx.executeSql(
-//       "UPDATE names SET name = ? WHERE id = ?",
-//       [currentName, id],
-//       (txObj, resultSet) => {
-//         if (resultSet.rowsAffected > 0) {
-//           let existingNames = [...names];
-//           const indexToUpdate = existingNames.findIndex(
-//             (name) => name.id === id
-//           );
-//           existingNames[indexToUpdate].name = currentName;
-//           setNames(existingNames);
-//           setCurrentName(undefined);
-//         }
-//       },
-//       (txObj, error) => console.log(error)
-//     );
-//   });
-// };
-
-// // Delete Tabe only in Dev Phase
-// db.transaction((tx) => {
-//   tx.executeSql(
-//     "DROP TABLE IF EXISTS names",
-//     [],
-//     (txObj, resultSet) => {
-//       // Table has been successfully dropped.
-//       console.log("Table dropped.");
-//     },
-//     (txObj, error) => {
-//       // Handle any errors that occur during the drop operation.
-//       console.log("Error dropping table: ", error);
-//     }
-//   );
-// });

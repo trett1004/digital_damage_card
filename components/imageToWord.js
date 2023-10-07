@@ -3,8 +3,6 @@ import {
   Document,
   Packer,
   Paragraph,
-  Media,
-  HeadingLevel,
   ImageRun,
   TextRun,
   Table,
@@ -14,12 +12,14 @@ import {
 } from "docx";
 import { Button } from "react-native";
 import * as Sharing from "expo-sharing";
+import { getDateString } from "../helpers/currentDate";
 
-export default function ImageToWord({ dbArray }) {
-  // console.info("dbArray", dbArray);
+export function ImageToWord({ dbArray }) {
   const generateWordDocument = async () => {
-    const children = [];
+    // Declare array for iteration of database data
+    const damageDetails = [];
     for (const row of dbArray) {
+      // specify images encoding type
       const imageBytes = await FileSystem.readAsStringAsync(row.imagePath, {
         encoding: FileSystem.EncodingType.Base64,
       });
@@ -35,7 +35,6 @@ export default function ImageToWord({ dbArray }) {
           }),
         ],
       });
-      // children.push(imageRun);
 
       // Render Damage Number
       const damageNumber = new Paragraph({
@@ -47,7 +46,6 @@ export default function ImageToWord({ dbArray }) {
           new TextRun(row.damageNumber),
         ],
       });
-      // children.push(damageNumber);
 
       // Render Date
       const date = new Paragraph({
@@ -59,6 +57,7 @@ export default function ImageToWord({ dbArray }) {
           new TextRun(row.date.toLocaleString("de-DE")),
         ],
       });
+
       // Render Windfarm
       const windFarm = new Paragraph({
         children: [
@@ -150,6 +149,7 @@ export default function ImageToWord({ dbArray }) {
           new TextRun(row.amount.toString()),
         ],
       });
+
       // Render Dimension [mm]
       const dimensions = new Paragraph({
         children: [
@@ -172,7 +172,7 @@ export default function ImageToWord({ dbArray }) {
         ],
       });
 
-      // Separation Line
+      // Render separation Line
       const separationLine = new Paragraph({
         children: [
           new TextRun(
@@ -182,7 +182,8 @@ export default function ImageToWord({ dbArray }) {
         ],
       });
 
-      children.push(
+      // push the rendered docx data to the array
+      damageDetails.push(
         imageRun,
         damageNumber,
         date,
@@ -200,7 +201,10 @@ export default function ImageToWord({ dbArray }) {
       );
     }
 
+    //////////////////// Make table of contens ////////////////////
+    // Declare array that holds the rows of the table
     const tableRows = [];
+    // Make table header row and push it to the array
     const tableHeader = new TableRow({
       children: [
         new TableCell({
@@ -249,10 +253,12 @@ export default function ImageToWord({ dbArray }) {
       ],
     });
 
+    //
     tableRows.push(tableHeader);
+
+    // iterate over database data and make table rows
     for (const tableRow of dbArray) {
-      console.log("hello");
-      const line = new TableRow({
+      const row = new TableRow({
         children: [
           new TableCell({
             width: {
@@ -299,9 +305,10 @@ export default function ImageToWord({ dbArray }) {
           }),
         ],
       });
-      tableRows.push(line);
+      tableRows.push(row);
     }
 
+    // Create docx document with the created arrays from above
     const doc = new Document({
       sections: [
         {
@@ -314,23 +321,38 @@ export default function ImageToWord({ dbArray }) {
           ],
         },
         {
-          properties: {}, // You can specify section properties here if needed
-          children: children,
+          properties: {},
+          children: damageDetails,
         },
       ],
     });
 
     try {
-      // Await the result of buildParagraph
-
       // Generate and save the document
       const base64 = await Packer.toBase64String(doc);
-      const filename = FileSystem.documentDirectory + "MyWordDocument.docx";
+      // Make the filename talking
+      const filenameContentsWindfarms = dbArray
+        .filter((element) => element.windFarm)
+        .map((element) => element.windFarm)
+        .map((windFarms) => windFarms.split(","))
+        .join("_");
+
+      const filenameContentsTurbines = dbArray
+        .filter((element) => element.turbine)
+        .map((element) => element.turbine)
+        .map((turbines) => turbines.split(","))
+        .join("_");
+
+      const date = getDateString();
+
+      const filename =
+        FileSystem.documentDirectory +
+        `Damage_Report_${date}_${filenameContentsWindfarms}__${filenameContentsTurbines}.docx`;
       await FileSystem.writeAsStringAsync(filename, base64, {
         encoding: FileSystem.EncodingType.Base64,
       });
-
       console.log(`Saved file: ${filename}`);
+
       Sharing.shareAsync(filename);
     } catch (error) {
       console.log("word", error);
