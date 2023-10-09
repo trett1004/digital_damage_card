@@ -1,10 +1,12 @@
-import { Text, View, TextInput, Button, Alert } from "react-native";
+import { View, Alert } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { StyleSheet } from "react-native";
 import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RNPickerSelect from "react-native-picker-select";
 import RadioGroup from "react-native-radio-buttons-group";
+import { Button, TextInput, Text, Provider } from "react-native-paper";
+import DropDown from "react-native-paper-dropdown";
 
 import { ExpoCamera } from "./expoCamera";
 
@@ -58,6 +60,21 @@ export function InputForm({ setFormData }) {
     }
   };
 
+  // Blade Number dropdown
+  const [bladeNumberDd, setBladeNumberDd] = useState("1");
+  const [showDropDown, setShowDropDown] = useState(false);
+
+  bladeNumbers = [
+    { label: "1", value: "1" },
+    { label: "2", value: "2" },
+    { label: "3", value: "3" },
+  ];
+
+  const selectedItem = {
+    title: "Selected Blade Number",
+    description: "Secondary long descriptive text ...",
+  };
+
   const {
     control,
     handleSubmit,
@@ -66,7 +83,7 @@ export function InputForm({ setFormData }) {
     defaultValues: {
       damageNumber: null,
       technician: "",
-      date: currentDate,
+      // date: currentDate,
       // windFarm: "",
       turbine: "",
       Number: "",
@@ -82,9 +99,9 @@ export function InputForm({ setFormData }) {
   // Send formdata to root
   const onSubmit = (data) => {
     data.img = picFromCam;
+    data.date = new Date();
     setFormData(data);
     setPicFromCam("");
-    console.log("setPicFromCam@setPicFromCam", picFromCam);
   };
 
   return (
@@ -98,6 +115,7 @@ export function InputForm({ setFormData }) {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            mode="outlined"
             style={styles.input}
             placeholder="Damage Number"
             onBlur={onBlur}
@@ -126,7 +144,7 @@ export function InputForm({ setFormData }) {
       />
       {errors.name && <Text>This is required.</Text>}
       {/*////////////////////// Date //////////////////////*/}
-      <View style={styles.input}>
+      {/* <View style={styles.input}>
         <Controller
           name="date"
           control={control}
@@ -144,7 +162,7 @@ export function InputForm({ setFormData }) {
             />
           )}
         />
-      </View>
+      </View> */}
       {/*////////////////////// Windfarm //////////////////////*/}
       <Controller
         name="windFarm"
@@ -184,8 +202,21 @@ export function InputForm({ setFormData }) {
       {errors.turbine && <Text>This is required.</Text>}
 
       {/*////////////////////// Blade //////////////////////*/}
+      {/* <Provider>
+        <DropDown
+          label={"Blade"}
+          mode={"outlined"}
+          visible={showDropDown}
+          showDropDown={() => setShowDropDown(true)}
+          onDismiss={() => setShowDropDown(false)}
+          value={bladeNumberDd}
+          setValue={setBladeNumberDd}
+          list={bladeNumbers}
+        />
+      </Provider> */}
+
       <View style={styles.input}>
-        <Text style={styles.label}>Select Blade Number</Text>
+        {/* <Text style={styles.label}>Select Blade Number</Text> */}
         <Controller
           name="bladeNumber"
           control={control}
@@ -194,6 +225,10 @@ export function InputForm({ setFormData }) {
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <RNPickerSelect
+              placeholder={{
+                label: "Select Blade Number",
+                value: null,
+              }}
               style={pickerSelectStyles}
               onValueChange={(value) => onChange(value)}
               items={[
@@ -228,7 +263,6 @@ export function InputForm({ setFormData }) {
 
       {/*////////////////////// Profile Depth//////////////////////*/}
       <View style={styles.input}>
-        <Text style={styles.label}>Select Profile Depth in % from LE:</Text>
         <Controller
           name="profileDepth"
           control={control}
@@ -237,6 +271,10 @@ export function InputForm({ setFormData }) {
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <RNPickerSelect
+              placeholder={{
+                label: "Select Profile Depth",
+                value: null,
+              }}
               style={pickerSelectStyles}
               onValueChange={(value) => onChange(value)}
               value={value}
@@ -332,7 +370,9 @@ export function InputForm({ setFormData }) {
       />
 
       <ExpoCamera setPicFromCam={setPicFromCam} picFromCam={picFromCam} />
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+      <Button icon="camera" mode="contained" onPress={handleSubmit(onSubmit)}>
+        Submit
+      </Button>
     </View>
   );
 }
@@ -342,11 +382,12 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   input: {
-    borderBottomWidth: 1,
     marginBottom: 10,
     padding: 10,
     fontSize: 16,
     color: "black",
+    backgroundColor: "white",
+    borderRadius: 20,
   },
   label: {
     fontSize: 16,
@@ -369,8 +410,8 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 10,
-    borderWidth: 1,
     borderColor: "gray",
+    borderWidth: 1,
     borderRadius: 4,
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon

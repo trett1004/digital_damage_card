@@ -9,13 +9,13 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "^7.6.0",
-    "@react-native-community/slider": "^4.4.3",
+    "@react-native-community/datetimepicker": "7.2.0",
+    "@react-native-community/slider": "4.4.2",
     "docx": "^8.2.3",
     "expo": "~49.0.13",
     "expo-camera": "~13.4.4",
     "expo-file-system": "~15.4.4",
-    "expo-image-picker": "^14.5.0",
+    "expo-image-picker": "~14.3.2",
     "expo-media-library": "~15.4.1",
     "expo-sharing": "~11.5.0",
     "expo-sqlite": "~11.3.3",
@@ -23,9 +23,12 @@
     "react": "18.2.0",
     "react-hook-form": "^7.47.0",
     "react-native": "0.72.5",
+    "react-native-paper": "^5.10.6",
+    "react-native-paper-dropdown": "^1.0.7",
     "react-native-picker-select": "^8.1.0",
     "react-native-radio-buttons-group": "^3.0.5",
-    "react-native-table-component": "^1.2.2"
+    "react-native-table-component": "^1.2.2",
+    "react-native-vector-icons": "^10.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

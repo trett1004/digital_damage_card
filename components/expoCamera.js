@@ -23,7 +23,7 @@ export function ExpoCamera({ setPicFromCam, picFromCam }) {
       });
 
       // If image is saved ...
-      if (!result.cancelled) {
+      if (!result.canceled) {
         // The image was taken, and `result.assets[0]["uri"]` contains the URI of the captured image.
 
         // Create the formatted date and time string
