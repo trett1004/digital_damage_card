@@ -1,12 +1,11 @@
-import { View, Alert } from "react-native";
+import * as React from "react";
+import { View, StyleSheet } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { StyleSheet } from "react-native";
 import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RNPickerSelect from "react-native-picker-select";
 import RadioGroup from "react-native-radio-buttons-group";
-import { Button, TextInput, Text, Provider } from "react-native-paper";
-import DropDown from "react-native-paper-dropdown";
+import { Button, TextInput, Text } from "react-native-paper";
 
 import { ExpoCamera } from "./expoCamera";
 
@@ -44,7 +43,7 @@ const radioButtonsDataSide = [
   },
 ];
 
-export function InputForm({ setFormData }) {
+export function InputForm({ setFormData, theme }) {
   const [imgAndFormData, setImgAndFormData] = useState([]);
   const [picFromCam, setPicFromCam] = useState("");
 
@@ -60,35 +59,20 @@ export function InputForm({ setFormData }) {
     }
   };
 
-  // Blade Number dropdown
-  const [bladeNumberDd, setBladeNumberDd] = useState("1");
-  const [showDropDown, setShowDropDown] = useState(false);
-
-  bladeNumbers = [
-    { label: "1", value: "1" },
-    { label: "2", value: "2" },
-    { label: "3", value: "3" },
-  ];
-
-  const selectedItem = {
-    title: "Selected Blade Number",
-    description: "Secondary long descriptive text ...",
-  };
-
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      damageNumber: null,
+      damageNumber: "",
       technician: "",
       // date: currentDate,
       // windFarm: "",
       turbine: "",
       Number: "",
       z: "",
-      profileDepth: 0,
+      profileDepth: "",
       bladeEdge: "",
       bladeSide: "",
       amount: null,
@@ -116,8 +100,8 @@ export function InputForm({ setFormData }) {
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             mode="outlined"
+            label="Damage Number"
             style={styles.input}
-            placeholder="Damage Number"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -134,8 +118,9 @@ export function InputForm({ setFormData }) {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            mode="outlined"
             style={styles.input}
-            placeholder="Technician"
+            label="Technician"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -143,26 +128,7 @@ export function InputForm({ setFormData }) {
         )}
       />
       {errors.name && <Text>This is required.</Text>}
-      {/*////////////////////// Date //////////////////////*/}
-      {/* <View style={styles.input}>
-        <Controller
-          name="date"
-          control={control}
-          rules={{
-            required: false,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <DateTimePicker
-              style={styles.input}
-              value={selectedDate}
-              mode="date"
-              is24Hour={true}
-              display="default"
-              onChange={handleDateChange}
-            />
-          )}
-        />
-      </View> */}
+
       {/*////////////////////// Windfarm //////////////////////*/}
       <Controller
         name="windFarm"
@@ -172,8 +138,9 @@ export function InputForm({ setFormData }) {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            mode="outlined"
             style={styles.input}
-            placeholder="Wind farm"
+            label="Wind farm"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -191,8 +158,9 @@ export function InputForm({ setFormData }) {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            mode="outlined"
             style={styles.input}
-            placeholder="Turbine"
+            label="Turbine"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -201,46 +169,26 @@ export function InputForm({ setFormData }) {
       />
       {errors.turbine && <Text>This is required.</Text>}
 
-      {/*////////////////////// Blade //////////////////////*/}
-      {/* <Provider>
-        <DropDown
-          label={"Blade"}
-          mode={"outlined"}
-          visible={showDropDown}
-          showDropDown={() => setShowDropDown(true)}
-          onDismiss={() => setShowDropDown(false)}
-          value={bladeNumberDd}
-          setValue={setBladeNumberDd}
-          list={bladeNumbers}
-        />
-      </Provider> */}
+      {/*////////////////////// Blade Number//////////////////////*/}
 
-      <View style={styles.input}>
-        {/* <Text style={styles.label}>Select Blade Number</Text> */}
-        <Controller
-          name="bladeNumber"
-          control={control}
-          rules={{
-            required: false,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <RNPickerSelect
-              placeholder={{
-                label: "Select Blade Number",
-                value: null,
-              }}
-              style={pickerSelectStyles}
-              onValueChange={(value) => onChange(value)}
-              items={[
-                { label: "1", value: "1" },
-                { label: "2", value: "2" },
-                { label: "3", value: "3" },
-              ]}
-            />
-          )}
-        />
-        {errors.bladeNumber && <Text>This is required.</Text>}
-      </View>
+      <Controller
+        name="bladeNumber"
+        control={control}
+        rules={{
+          required: false,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            mode="outlined"
+            style={styles.input}
+            label="Blade Number"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+      {errors.bladeNumber && <Text>This is required.</Text>}
 
       {/*////////////////////// Z [mm] //////////////////////*/}
       <Controller
@@ -251,8 +199,9 @@ export function InputForm({ setFormData }) {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            mode="outlined"
             style={styles.input}
-            placeholder="Z [mm]"
+            label="Z [mm]"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -262,43 +211,29 @@ export function InputForm({ setFormData }) {
       {errors.z && <Text>This is required.</Text>}
 
       {/*////////////////////// Profile Depth//////////////////////*/}
-      <View style={styles.input}>
-        <Controller
-          name="profileDepth"
-          control={control}
-          rules={{
-            required: false,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <RNPickerSelect
-              placeholder={{
-                label: "Select Profile Depth",
-                value: null,
-              }}
-              style={pickerSelectStyles}
-              onValueChange={(value) => onChange(value)}
-              value={value}
-              items={[
-                { label: "0%", value: 0 },
-                { label: "10%", value: 10 },
-                { label: "20%", value: 20 },
-                { label: "30%", value: 30 },
-                { label: "40%", value: 40 },
-                { label: "50%", value: 50 },
-                { label: "60%", value: 60 },
-                { label: "70%", value: 70 },
-                { label: "80%", value: 80 },
-                { label: "90%", value: 90 },
-                { label: "100%", value: 100 },
-              ]}
-            />
-          )}
-        />
-        {errors.profileDepth && <Text>This is required.</Text>}
-      </View>
+
+      <Controller
+        name="profileDepth"
+        control={control}
+        rules={{
+          required: false,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            mode="outlined"
+            style={styles.input}
+            label="Profile depth in % of LE"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+
+      {errors.profileDepth && <Text>This is required.</Text>}
 
       {/*////////////////////// Leading/Trailing Edge //////////////////////*/}
-      <View>
+      <View style={[styles.radioButton, { marginTop: 10, marginBottom: 10 }]}>
         <Controller
           name="bladeEdge"
           control={control}
@@ -317,7 +252,7 @@ export function InputForm({ setFormData }) {
       </View>
 
       {/*////////////////////// Suction/Pressure Side //////////////////////*/}
-      <View>
+      <View style={styles.radioButton}>
         <Controller
           name="bladeSide"
           control={control}
@@ -343,8 +278,9 @@ export function InputForm({ setFormData }) {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            mode="outlined"
             style={styles.input}
-            placeholder="Amount"
+            label="Amount"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -360,8 +296,9 @@ export function InputForm({ setFormData }) {
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={styles.input}
-            placeholder="Dimensions Length x Width [mm]"
+            mode="outlined"
+            style={[styles.input, { marginBottom: 20 }]}
+            label="Dimensions Length x Width [mm]"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -370,52 +307,47 @@ export function InputForm({ setFormData }) {
       />
 
       <ExpoCamera setPicFromCam={setPicFromCam} picFromCam={picFromCam} />
-      <Button icon="camera" mode="contained" onPress={handleSubmit(onSubmit)}>
-        Submit
-      </Button>
+      <View style={styles.buttonContainer}>
+        <Button
+          style={{ width: 200 }}
+          icon="content-save-outline"
+          mode="contained"
+          onPress={handleSubmit(onSubmit)}>
+          Save Data
+        </Button>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingBottom: 25,
+    justifyContent: "center",
   },
   input: {
-    marginBottom: 10,
-    padding: 10,
-    fontSize: 16,
-    color: "black",
-    backgroundColor: "white",
-    borderRadius: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 10,
+    marginTop: 3,
+    marginBottom: 3,
   },
   errorText: {
     color: "red",
   },
-  submitButton: {
-    backgroundColor: "blue",
-    color: "white",
-    padding: 10,
+  buttonContainer: {
+    flex: 1,
+    justifyContent: "center", // Center vertically
+    alignItems: "center", // Center horizontally},
+  },
+  submitButton: {},
+  radioButton: {
+    borderWidth: 1,
+    paddingBottom: 10,
+    paddingTop: 10,
     borderRadius: 5,
-    textAlign: "center",
   },
 });
 
 const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 4,
-    color: "black",
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
+  inputIOS: {},
   inputAndroid: {
     fontSize: 16,
     paddingHorizontal: 10,
@@ -446,3 +378,28 @@ render={({ field: { onChange, onBlur, value } }) => (
 name="lastName"
 />
 */
+
+{
+  /*////////////////////// Date //////////////////////*/
+}
+{
+  /* <View style={styles.input}>
+        <Controller
+          name="date"
+          control={control}
+          rules={{
+            required: false,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <DateTimePicker
+              style={styles.input}
+              value={selectedDate}
+              mode="date"
+              is24Hour={true}
+              display="default"
+              onChange={handleDateChange}
+            />
+          )}
+        />
+      </View> */
+}

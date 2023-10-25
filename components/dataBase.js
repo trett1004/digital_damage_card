@@ -5,6 +5,7 @@ import { ImageToWord } from "./imageToWord";
 import TableSummary from "./tableInUi";
 
 export function DataBase({ formData }) {
+  console.log("formData@Database", formData);
   const [db, setDb] = useState(SQLite.openDatabase("example.db"));
   const [isLoading, setIsLoading] = useState(true);
   const [names, setNames] = useState([]);
@@ -130,7 +131,7 @@ export function DataBase({ formData }) {
   return (
     <View style={styles.container}>
       <ImageToWord dbArray={names} />
-      {showNames()}
+      {/* {showNames()} */}
       <TableSummary dbArray={names} />
     </View>
   );
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
   },
   row: {
     flexDirection: "row",

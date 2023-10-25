@@ -1,6 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import { View, Button, Image } from "react-native";
+import { View, Image } from "react-native";
+import { Button, Text } from "react-native-paper";
 
 import { getDateString, getTimeString } from "../helpers/currentDate";
 
@@ -49,7 +50,13 @@ export function ExpoCamera({ setPicFromCam, picFromCam }) {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 25,
+      }}>
       {picFromCam && (
         <Image
           source={{ uri: picFromCam }}
@@ -57,7 +64,13 @@ export function ExpoCamera({ setPicFromCam, picFromCam }) {
         />
       )}
 
-      <Button title="Make Photo" onPress={takePictureAndSave} />
+      <Button
+        style={{ width: 200 }}
+        icon="camera"
+        mode="contained"
+        onPress={takePictureAndSave}>
+        Make Photo
+      </Button>
     </View>
   );
 }

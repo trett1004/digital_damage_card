@@ -1,17 +1,13 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 
-const data = [
-  { windFarm: 1, turbine: "John", bladeNumber: "john@gmail.com" },
-  { windFarm: 2, turbine: "Bob", bladeNumber: "bob@gmail.com" },
-];
-
 const TableSummary = ({ dbArray }) => {
   const data_ = dbArray.map((element) => ({
     windFarm: element.windFarm,
     turbine: element.turbine,
     bladeNumber: element.bladeNumber,
     damageNumber: element.damageNumber,
+    date: element.date,
   }));
 
   const header = {
@@ -19,12 +15,14 @@ const TableSummary = ({ dbArray }) => {
     turbine: "Turbine",
     bladeNumber: "Blade Nr.",
     damageNumber: "Damage Nr.",
+    date: new Date(),
   };
 
   data_.unshift(header);
+  console.log("date@table", data_.date);
 
-  const renderItems = data_.map((item) => (
-    <View key={item.windFarm} style={{ flexDirection: "row" }}>
+  const renderItems = data_.map((item, idx) => (
+    <View key={idx} style={{ flexDirection: "row" }}>
       <View style={styles.cell}>
         <Text style={styles.text}>{item.windFarm}</Text>
       </View>

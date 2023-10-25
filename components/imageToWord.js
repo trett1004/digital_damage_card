@@ -10,9 +10,10 @@ import {
   TableRow,
   WidthType,
 } from "docx";
-import { Button } from "react-native";
+import { Button } from "react-native-paper";
 import * as Sharing from "expo-sharing";
 import { getDateString } from "../helpers/currentDate";
+import { View } from "react-native";
 
 export function ImageToWord({ dbArray }) {
   const generateWordDocument = async () => {
@@ -360,11 +361,16 @@ export function ImageToWord({ dbArray }) {
   };
 
   return (
-    <Button
-      title="Make Word"
-      onPress={() => {
-        generateWordDocument();
-      }}
-    />
+    <View style={{ marginBottom: 20 }}>
+      <Button
+        style={{ width: 200 }}
+        icon="microsoft-word"
+        mode="contained"
+        onPress={() => {
+          generateWordDocument();
+        }}>
+        Create Report
+      </Button>
+    </View>
   );
 }

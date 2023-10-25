@@ -5,7 +5,6 @@ import * as React from "react";
 import {
   MD3LightTheme as DefaultTheme,
   PaperProvider,
-  Button,
 } from "react-native-paper";
 
 // Components
@@ -18,14 +17,12 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "tomato",
-    secondary: "yellow",
   },
 };
 
 export default function App() {
   const [formData, setFormData] = useState([]);
-
+  // console.log("data@root", formData);
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.container}>
@@ -43,11 +40,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: "center",
+    alignItems: "center",
     // justifyContent: "center",
-    borderColor: "black",
-    // marginVertical: 32,
-    borderWidth: 3,
   },
   scrollView: {
     flex: 1,
